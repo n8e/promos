@@ -1,11 +1,6 @@
-# Frontend Boilerplate with React, Redux & TypeScript
+# Promos
 
-A bare minimum react-hooks-redux-webpack-typescript boilerplate with TodoMVC example.
-
-Note that this project does not include **Server-Side Rendering**, **Static code analysis**, **Testing Frameworks**
-If needed, please fork this repository and add your own that meets your requirements.
-
-Ideal for creating React apps from the scratch.
+This is a SPA that replicates the view below (https://www.figma.com/file/6J7oriX3K4zPLF2lrhfIvJ/front-end-test-prototype?node-id=0%3A1):
 
 ## Contains
 
@@ -15,7 +10,6 @@ Ideal for creating React apps from the scratch.
 - [x] [Redux Thunk](https://github.com/reduxjs/redux-thunk) 2.3
 - [x] [React Router](https://github.com/ReactTraining/react-router) 5.1
 - [x] [Redux DevTools Extension](https://github.com/zalmoxisus/redux-devtools-extension)
-- [x] [TodoMVC example](http://todomvc.com)
 
 ### Build tools
 
@@ -33,25 +27,19 @@ Ideal for creating React apps from the scratch.
 ## Installation
 
 ```
-$ npm ci
+$ yarn
 ```
 
 ## Running
 
 ```
-$ npm start
+$ yarn start
 ```
 
 ## Build
 
 ```
-$ npm run build
-```
-
-## Deploy (to the [GitHub Pages](https://pages.github.com/))
-
-```
-$ npm run deploy
+$ yarn build
 ```
 
 # License

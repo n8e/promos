@@ -1,63 +1,64 @@
-import React from 'react';
-import style from './style.css';
+import React, { FC } from 'react';
+import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTodoActions } from 'app/actions';
+import { ServiceActions, useServiceActions } from 'app/actions';
 import { RootState } from 'app/reducers';
-import { TodoModel } from 'app/models';
-import { Header, TodoList, Footer } from 'app/components';
+import { Header, SearchInput, ServicesList, SideBar, Footer } from 'app/components';
+import { H1 } from 'app/components/shared';
+import './style.css';
 
-const FILTER_VALUES = (Object.keys(TodoModel.Filter) as (keyof typeof TodoModel.Filter)[]).map(
-  (key) => TodoModel.Filter[key]
-);
+const Container = styled.div`
+  background: #f6f7fa;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  width: 100%;
+`;
 
-const FILTER_FUNCTIONS: Record<TodoModel.Filter, (todo: TodoModel) => boolean> = {
-  [TodoModel.Filter.SHOW_ALL]: () => true,
-  [TodoModel.Filter.SHOW_ACTIVE]: (todo) => !todo.completed,
-  [TodoModel.Filter.SHOW_COMPLETED]: (todo) => todo.completed
-};
+const AppBody = styled.div`
+  margin-left: 80px;
+  width: 100%;
+`;
 
-export namespace App {
-  export interface Props extends RouteComponentProps<void> {}
+const PageContent = styled.div`
+  height: 100vh;
+  overflow-y: scroll;
+  padding: 32px;
+  top: 80px;
+`;
+
+interface Props extends RouteComponentProps<void> {
+  searchService: typeof ServiceActions.searchService;
 }
 
-export const App = ({ history, location }: App.Props) => {
+export const App: FC<Props> = ({ history, location }) => {
   const dispatch = useDispatch();
-  const todoActions = useTodoActions(dispatch);
-  const { todos, filter } = useSelector((state: RootState) => {
-    const hash = location?.hash?.replace('#', '');
-    return {
-      todos: state.todos,
-      filter: FILTER_VALUES.find((value) => value === hash) ?? TodoModel.Filter.SHOW_ALL
-    };
-  });
+  const serviceActions = useServiceActions(dispatch);
+  const { services } = useSelector((state: RootState) => ({ services: state.services }));
 
-  const handleClearCompleted = React.useCallback((): void => {
-    todoActions.clearCompleted();
-  }, [todoActions]);
-
-  const handleFilterChange = React.useCallback(
-    (filter: TodoModel.Filter): void => {
-      history.push(`#${filter}`);
+  const handleSearch = React.useCallback(
+    (title: string) => {
+      if (title.length) serviceActions.searchService({ title });
     },
-    [history]
+    [serviceActions]
   );
 
-  const filteredTodos = React.useMemo(() => (filter ? todos.filter(FILTER_FUNCTIONS[filter]) : todos), [todos, filter]);
-  const activeCount = React.useMemo(() => todos.filter((todo) => !todo.completed).length, [todos]);
-  const completedCount = React.useMemo(() => todos.filter((todo) => todo.completed).length, [todos]);
-
   return (
-    <div className={style.normal}>
-      <Header addTodo={todoActions.addTodo} />
-      <TodoList todos={filteredTodos} actions={todoActions} />
-      <Footer
-        filter={filter}
-        activeCount={activeCount}
-        completedCount={completedCount}
-        onClickClearCompleted={handleClearCompleted}
-        onClickFilter={handleFilterChange}
-      />
-    </div>
+    <Container>
+      <SideBar />
+      <AppBody>
+        <Header balance={213920} payout={159465} />
+
+        <PageContent>
+          <H1 text="Services" />
+          <SearchInput onChange={handleSearch} placeholder="Search" />
+          <ServicesList services={services} />
+          <Footer />
+        </PageContent>
+        
+      </AppBody>
+    </Container>
   );
 };

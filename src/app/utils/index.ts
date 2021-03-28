@@ -6,3 +6,5 @@ export function omit<T extends object, K extends keyof T>(target: T, ...omitKeys
     return res;
   }, {} as any);
 }
+
+export const formatToCurrencyString = (value: number) => `${String(value).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} $`;
